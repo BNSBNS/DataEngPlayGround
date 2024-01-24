@@ -57,6 +57,7 @@ jobs:
           AWS_S3_REGION: ${{ secrets.AWS_REGION }}
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
+        working-directory: terraform #add this so it can find terraform files
         continue-on-error: true
       
       - uses: actions/github-script@v6
