@@ -22,9 +22,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform #add this so it can find terraform files
+        
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -39,12 +37,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.1.7"
+    
 
   
       # https://github.com/hashicorp/setup-terraform
       - name: Terraform Init
         id: init
         run: terraform init
+        working-directory: terraform #add this so it can find terraform files
 
       - name: Terraform Validate
         id: validate
@@ -62,7 +62,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
         continue-on-error: true
-      
+        working-directory: terraform #add this so it can find terraform files
 
 
       # - uses: actions/github-script@v6
