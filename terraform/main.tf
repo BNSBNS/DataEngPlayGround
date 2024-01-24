@@ -2,6 +2,50 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls#BucketOwnerEnforced
+
+# first bucket
+resource "aws_s3_bucket" "input-bucketr234asdq" {
+  bucket = "input-bucketr234asdq"
+}
+
+resource "aws_s3_bucket_ownership_controls" "input-bucketr234asdq" {
+  bucket = aws_s3_bucket.input-bucketr234asdq.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+# second bucket
+resource "aws_s3_bucket" "processed-bucketr234asdq" {
+  bucket = "processed-bucketr234asdq"
+}
+
+resource "aws_s3_bucket_ownership_controls" "processed-bucketr234asdq" {
+  bucket = aws_s3_bucket.processed-bucketr234asdq.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+
+/*
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
       version = "~> 4.16"
     }
   }
@@ -22,32 +66,5 @@ resource "aws_instance" "app_server" {
   }
 }
 
-
-/*
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 3.0.1"
-    }
-  }
-}
-
-provider "docker" {}
-
-resource "docker_image" "nginx" {
-  name         = "nginx"
-  keep_locally = false
-}
-
-# resource type, name
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.image_id
-  name  = "tutorial"
-
-  ports {
-    internal = 80
-    external = 8000
-  }
-}
 */
+
