@@ -1,0 +1,71 @@
+name: 'Terraform to S3'
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+        
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # https://github.com/aws-actions/configure-aws-credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_IAM_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_KEY_ACCESS }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+    # Install the preferred version of Terraform CLI 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+    
+
+  
+      # https://github.com/hashicorp/setup-terraform
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: terraform #add this so it can find terraform files
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+
+
+      # Run a terraform plan for pull requests only
+      - name: Terraform Plan
+        id: plan
+
+        if: github.event_name == 'pull_request'
+        working-directory: terraform #add this so it can find terraform files
+        run: terraform plan -no-color
+        continue-on-error: true
+
+    # Comment out as I do not wish to apply currently on actions.
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve
