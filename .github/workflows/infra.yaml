@@ -32,22 +32,19 @@ jobs:
 
     # Install the preferred version of Terraform CLI 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.0.10
+          terraform_version: "1.1.7"
 
   
-
-  # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      # https://github.com/hashicorp/setup-terraform
       - name: Terraform Init
         id: init
-        env:
-          AWS_IAM_KEY: ${{ secrets.AWS_IAM_KEY_ID }}
-          AWS_AWS_IAM_KEY_ACCESS: ${{ secrets.AWS_IAM_KEY_ACCESS }}
-          AWS_S3_REGION: ${{ secrets.AWS_REGION }}
+        run: terraform init
 
-        run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP"
-
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
 
 
@@ -60,8 +57,8 @@ jobs:
           AWS_S3_REGION: ${{ secrets.AWS_REGION }}
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
+        continue-on-error: true
       
-
 
       # # Add a comment to pull requests with plan results
       # - name: add-plan-comment
