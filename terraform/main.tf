@@ -1,3 +1,7 @@
+locals {
+  aws_region = var.aws_region
+}
+
 terraform {
   required_providers {
     aws = {
@@ -8,7 +12,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = local.aws_region
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls#BucketOwnerEnforced
