@@ -10,7 +10,6 @@
 potential issues:
 > “a state file falls out of date frequently and needs refresh repeatedly. When sharing it remotely with a team, we have to handle racing condition, i.e. concurrent apply, or plan during apply. In addition, a state file contains sensitive data so we must protect access.”
 
-
 2) Batch with Glue/EMR/lambdas
 
 3) Stream with Kinesis
