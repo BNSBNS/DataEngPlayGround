@@ -21,10 +21,10 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    env:
-      AWS_IAM_KEY: ${{ secrets.AWS_IAM_KEY_ID }}
-      AWS_AWS_IAM_KEY_ACCESS: ${{ secrets.AWS_IAM_KEY_ACCESS }}
-      AWS_S3_REGION: ${{ secrets.AWS_REGION }}
+    # env:
+    #   AWS_IAM_KEY: ${{ secrets.AWS_IAM_KEY_ID }}
+    #   AWS_AWS_IAM_KEY_ACCESS: ${{ secrets.AWS_IAM_KEY_ACCESS }}
+    #   AWS_S3_REGION: ${{ secrets.AWS_REGION }}
         
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -34,6 +34,13 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
+
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_IAM_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_KEY_ACCESS }}
 
     # Install the preferred version of Terraform CLI 
       - name: Setup Terraform
