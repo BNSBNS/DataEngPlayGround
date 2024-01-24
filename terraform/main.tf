@@ -1,18 +1,9 @@
-locals {
-  aws_region = var.aws_region
-}
-
 terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "3.74.2"  # version 4 has issues
-    }
-  }
+  required_version = ">= 0.12"
 }
 
 provider "aws" {
-  region = local.aws_region
+  region = var.aws_region
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls#BucketOwnerEnforced
